@@ -1,0 +1,21 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+</head>
+
+<body>
+
+  <h3>Classifica</h3>
+
+  <ul>
+    {% for developer in developers %}
+    <li>{{developer.name}}</li>
+    {% endfor %}
+  </ul>
+
+</body>
+
+</html>
