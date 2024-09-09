@@ -17,7 +17,7 @@
 
   <div class="d-flex flex-column text-center">
     {% for developer in classifica %}
-    <div class="p-2">{{developer.name}} - {{developer.total_points}}</div>
+    <div class="p-2">{{developer.name}} - {{developer.win_ratio}}</div>
     {% endfor %}
   </div>
 
@@ -29,12 +29,15 @@
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <h5 class="card-title text-center">Punti: {{developer.total_points}}</h5>
-        <p class="card-text">{{developer.description}}</p>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
+        <!-- <p class="card-text">{{developer.description}}</p> -->
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+          win</button>
+        <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
           point</button>
         <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
-          point</button>
+          point</button> -->
       </div>
     </div>
     {% endfor %}
@@ -44,17 +47,23 @@
     <div class="card" style="width: 18rem;">
       <div class="card-body">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <h5 class="card-title text-center">Punti: {{developer.total_points}}</h5>
-        <p class="card-text">{{developer.description}}</p>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
+        <!-- <p class="card-text">{{developer.description}}</p> -->
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+          win</button>
+        <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
           point</button>
         <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
-          point</button>
+          point</button> -->
       </div>
     </div>
     {% endfor %}
   </div>
   <form method="post" id="form_points" class="d-none">
+    {% csrf_token %}
+  </form>
+  <form method="post" id="form_match" class="d-none">
     {% csrf_token %}
   </form>
 
@@ -72,6 +81,17 @@
     }
     form.submit()
   }
+  function edit_match(id, mode) {
+    form = document.getElementById("form_match")
+    if (mode == "win") {
+      form.action = `/calcetto/win_match/${id}/`
+    }
+    else {
+      form.action = `/calcetto/lost_match/${id}/`
+    }
+    form.submit()
+  }
+
 </script>
 
 </html>
