@@ -1,6 +1,7 @@
 from django.contrib import admin
 from calcetto.models import Developer
 
-admin.site.register(Developer)
+class DeveloperAdmin(admin.ModelAdmin):
+  list_display = ["name","total_points"]
 
-# Register your models here.
+admin.site.register(Developer)

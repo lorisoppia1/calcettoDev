@@ -13,14 +13,65 @@
 
 <body>
 
+  <h3 class="text-center">Classifica</h3>
+
+  <div class="d-flex flex-column text-center">
+    {% for developer in classifica %}
+    <div class="p-2">{{developer.name}} - {{developer.total_points}}</div>
+    {% endfor %}
+  </div>
+
+
   <h3 class="text-center">Giocatori</h3>
 
-  <ul>
-    {% for developer in developers %}
-    <li>{{developer.name}}</li>
+  <div class="d-flex justify-content-center">
+    {% for developer in developers1 %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <h5 class="card-title text-center">Punti: {{developer.total_points}}</h5>
+        <p class="card-text">{{developer.description}}</p>
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
+          point</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
+          point</button>
+      </div>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
+  <div class="d-flex justify-content-center">
+    {% for developer in developers2 %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <h5 class="card-title text-center">Punti: {{developer.total_points}}</h5>
+        <p class="card-text">{{developer.description}}</p>
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
+          point</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
+          point</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <form method="post" id="form_points" class="d-none">
+    {% csrf_token %}
+  </form>
+
 
 </body>
+
+<script>
+  function edit_point(id, mode) {
+    form = document.getElementById("form_points")
+    if (mode == "add") {
+      form.action = `/calcetto/add_point/${id}/`
+    }
+    else {
+      form.action = `/calcetto/remove_point/${id}/`
+    }
+    form.submit()
+  }
+</script>
 
 </html>
