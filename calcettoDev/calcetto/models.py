@@ -14,5 +14,5 @@ class Developer(models.Model):
 
   def win_ratio(self):
     if self.total_match != 0:
-      return round((self.win_match / self.total_match), 2)
+      return round((self.win_match * 100 / self.total_match), 2)
     return 0
