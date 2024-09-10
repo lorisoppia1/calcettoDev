@@ -9,6 +9,29 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <style>
+    div[name="moving"] {
+      animation: move 2s ease-in-out infinite;
+    }
+
+    @keyframes move {
+      0% {
+        transform: translateX(0);
+      }
+
+      33% {
+        transform: translateX(100px);
+      }
+
+      66% {
+        transform: translateX(-100px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -33,7 +56,8 @@
 
   <div class="d-flex flex-column text-center">
     {% for developer in classifica %}
-    <div class="p-2">{{forloop.counter}} - {{developer.name}} - {{developer.win_ratio}} % -
+    <div name="moving" class="p-2">{{forloop.counter}} - {{developer.name}} -
+      {{developer.win_ratio}} % -
       {{developer.win_match}}/{{developer.total_match}}</div>
     {% endfor %}
   </div>
@@ -83,6 +107,7 @@
   <form method="post" id="form_match" class="d-none">
     {% csrf_token %}
   </form>
+  </div>
 
 
 </body>
@@ -98,6 +123,11 @@
   //   }
   //   form.submit()
   // }
+
+  let names = document.getElementsByName("moving")
+  for (let i = 0; i < names.length; i++) {
+    names[i].style.animationDelay = `${Math.random() * 0.8}s`
+  }
   function edit_match(id, mode) {
     if (confirm("Vuoi aggiungere il match?")) {
       form = document.getElementById("form_match")
