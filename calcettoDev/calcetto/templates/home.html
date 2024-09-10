@@ -13,11 +13,28 @@
 
 <body>
 
+  <div id="BoxSantoDelGiorno" style="border:1px solid black; margin-top:10px; overflow:auto; width:300px">
+    <h4 style="margin-bottom:4px; margin-top:0">
+      <a href="https://www.santodelgiorno.it" style="color:black; text-decoration:underline">
+        Santo del giorno
+      </a>
+    </h4>
+    <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
+    <p id="SantoDelGiorno">
+      san francesco d'assisi
+      <i>pastore e martire</i>
+    </p>
+    <div style="text-align:right; margin-bottom:5px">
+      <a href="https://www.santodelgiorno.it">santodelgiorno.it</a>
+    </div>
+  </div>
+
   <h3 class="text-center">Classifica</h3>
 
   <div class="d-flex flex-column text-center">
     {% for developer in classifica %}
-    <div class="p-2">{{developer.name}} - {{developer.win_ratio}}</div>
+    <div class="p-2">{{forloop.counter}} - {{developer.name}} - {{developer.win_ratio}} % -
+      {{developer.win_match}}/{{developer.total_match}}</div>
     {% endfor %}
   </div>
 
@@ -71,27 +88,42 @@
 </body>
 
 <script>
-  function edit_point(id, mode) {
-    form = document.getElementById("form_points")
-    if (mode == "add") {
-      form.action = `/calcetto/add_point/${id}/`
-    }
-    else {
-      form.action = `/calcetto/remove_point/${id}/`
-    }
-    form.submit()
-  }
+  // function edit_point(id, mode) {
+  //   form = document.getElementById("form_points")
+  //   if (mode == "add") {
+  //     form.action = `/calcetto/add_point/${id}/`
+  //   }
+  //   else {
+  //     form.action = `/calcetto/remove_point/${id}/`
+  //   }
+  //   form.submit()
+  // }
   function edit_match(id, mode) {
-    form = document.getElementById("form_match")
-    if (mode == "win") {
-      form.action = `/calcetto/win_match/${id}/`
+    if (confirm("Vuoi aggiungere il match?")) {
+      form = document.getElementById("form_match")
+      if (mode == "win") {
+        form.action = `/calcetto/win_match/${id}/`
+      }
+      else {
+        form.action = `/calcetto/lost_match/${id}/`
+      }
+      form.submit()
+    } else {
+      alert("Francesco non sa programmare Rails")
     }
-    else {
-      form.action = `/calcetto/lost_match/${id}/`
-    }
-    form.submit()
+
   }
 
+</script>
+<script>
+  var data = new Date();
+  var datastring = data.getDate() + "/" + data.getMonth() + 1 + "/" + data.getFullYear();
+  var node = document.createElement('script');
+  node.type = 'text/javascript';
+  node.async = true;
+  node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
+  // Now insert the node into the DOM, perhaps using insertBefore()
+  document.getElementById("BoxSantoDelGiorno").appendChild(node);
 </script>
 
 </html>
