@@ -7,6 +7,7 @@ class Developer(models.Model):
   total_points = models.IntegerField(default=0)
   total_match = models.IntegerField(default=0)
   win_match = models.IntegerField(default=0)
+  image_url = models.CharField(max_length=500, default="")
 
   def __str__(self):
     return f"{self.name} - {self.total_points}"

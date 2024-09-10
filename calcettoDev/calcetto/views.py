@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from calcetto.models import *
 from django.db.models import F, FloatField
 from django.db.models.functions import Cast, Round
+# import requests
 
 class Home(APIView):
   
@@ -10,6 +11,8 @@ class Home(APIView):
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
+    # res = requests.get("https://api.thecatapi.com/v1/images/search?limit=12")
+    # cats_url = [item["url"] for item in res.json() ]
     # developers = Developer.objects.annotate(win_ratio=Round(Cast(F('win_match'), FloatField()) / Cast(F('total_match'), FloatField()), 2)).order_by('-win_ratio')
     classifica.sort(key=lambda dev: dev.win_ratio(), reverse=True)
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica}
