@@ -64,7 +64,7 @@
       {% endfor %}
     </div>
 
-    <div id="random" style="border:1px solid black; margin:40px; overflow:auto; width:300px;">
+    <div id="random" style="margin:40px; width:300px;">
       <form action="/calcetto/random_match/" method="post">
         {% csrf_token %}
         {% for developer in classifica %}
@@ -99,10 +99,6 @@
           lost</button>
         <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
           win</button>
-        <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
-          point</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
-          point</button> -->
       </div>
     </div>
     {% endfor %}
@@ -159,14 +155,14 @@
 
 </script>
 <script>
-  // var data = new Date();
-  // var datastring = data.getDate() + "/" + data.getMonth() + 1 + "/" + data.getFullYear();
-  // var node = document.createElement('script');
-  // node.type = 'text/javascript';
-  // node.async = true;
-  // node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
-  // // Now insert the node into the DOM, perhaps using insertBefore()
-  // document.getElementById("BoxSantoDelGiorno").appendChild(node);
+  var data = new Date();
+  var datastring = data.getDate() + "/" + data.getMonth() + 1 + "/" + data.getFullYear();
+  var node = document.createElement('script');
+  node.type = 'text/javascript';
+  node.async = true;
+  node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
+  // Now insert the node into the DOM, perhaps using insertBefore()
+  document.getElementById("BoxSantoDelGiorno").appendChild(node);
 </script>
 
 </html>
