@@ -7,4 +7,5 @@ urlpatterns = [
   path('remove_point/<int:id>/', RemovePoints.as_view(), name='remove-point'),
   path('win_match/<int:id>/', WinMatch.as_view(), name='win-match'),
   path('lost_match/<int:id>/', LostMatch.as_view(), name='remove-point'),
+  path('random_match/', RandomMatch.as_view(), name='random-match'),
 ]

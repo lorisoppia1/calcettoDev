@@ -3,7 +3,6 @@ from django.db import models
 class Developer(models.Model):
 
   name = models.CharField(max_length=100)
-  description = models.CharField(max_length=255, default="")
   total_points = models.IntegerField(default=0)
   total_match = models.IntegerField(default=0)
   win_match = models.IntegerField(default=0)
