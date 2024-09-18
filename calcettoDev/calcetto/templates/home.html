@@ -11,10 +11,43 @@
     crossorigin="anonymous"></script>
   <style>
     div[name="moving"] {
-      animation: move 2s ease-in-out infinite;
+      animation: move 2s linear infinite;
     }
 
     @keyframes move {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    /* Quando l'immagine è visibile, applica l'animazione */
+    .zoom {
+      display: block;
+      animation: zoomInOut 0.5s infinite;
+    }
+
+    /* Definizione dell'animazione zoom in/out */
+    @keyframes zoomInOut {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+
+    /* @keyframes move {
       0% {
         transform: translateX(0);
       }
@@ -30,13 +63,15 @@
       100% {
         transform: translateX(0);
       }
-    }
+    } */
   </style>
 </head>
 
 <body>
 
   <div class="d-flex justify-content-between">
+    <img id="myImage" name="images" src="https://cdn.pixabay.com/photo/2024/02/15/14/57/animal-8575560_640.jpg"
+      alt="Esempio Immagine" style="display: none;">
 
     <div id="BoxSantoDelGiorno" style="margin:40px; overflow:auto; width:300px;">
       <h4 style="margin-bottom:4px; margin-top:0">
@@ -49,13 +84,18 @@
         san francesco d'assisi
         <i>pastore e martire</i>
       </p>
-    </div>
 
+      <div>
+        <button class="btn btn-sm btn-warning" type="button" onclick="boh()">Non premere</button>
+      </div>
+    </div>
+    <img id="myImage" name="images" src="https://cdn.pixabay.com/photo/2024/02/15/14/57/animal-8575560_640.jpg"
+      alt="Esempio Immagine" style="display: none;">
 
     <div class="d-flex flex-column text-center">
       <h3 class="text-center">Classifica</h3>
       {% for developer in classifica %}
-      <div name="moving" class="p-2">
+      <div name="" class="p-2">
         <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
         {{forloop.counter}} - {{developer.name}} -
         {{developer.win_ratio}} % -
@@ -87,6 +127,9 @@
 
   </div>
 
+  <img id="myImage" name="images" src="https://cdn.pixabay.com/photo/2024/02/15/14/57/animal-8575560_640.jpg"
+    alt="Esempio Immagine" style="display: none;">
+
   <h3 class="text-center">Giocatori</h3>
 
   <div class="d-flex justify-content-center">
@@ -103,6 +146,8 @@
     </div>
     {% endfor %}
   </div>
+  <img id="myImage" name="images" src="https://cdn.pixabay.com/photo/2024/02/15/14/57/animal-8575560_640.jpg"
+    alt="Esempio Immagine" style="display: none;">
   <div class="d-flex justify-content-center">
     {% for developer in developers2 %}
     <div class="card" style="width: 15rem; margin: 8px;">
@@ -121,6 +166,8 @@
     </div>
     {% endfor %}
   </div>
+  <img id="myImage" name="images" src="https://cdn.pixabay.com/photo/2024/02/15/14/57/animal-8575560_640.jpg"
+    alt="Esempio Immagine" style="display: none;">
   <form method="post" id="form_points" class="d-none">
     {% csrf_token %}
   </form>
@@ -137,6 +184,17 @@
   for (let i = 0; i < names.length; i++) {
     names[i].style.animationDelay = `${Math.random() * 0.8}s`
   }
+
+  function boh() {
+    let images = document.getElementsByTagName('div');
+    for (let i = 0; i < images.length; i++) {
+
+      images[i].style.display = "block"
+      images[i].classList.add('zoom');
+      images[i].style.animationDelay = `${Math.random() * 0.3}s`
+    }
+  }
+
   function edit_match(id, mode) {
     if (confirm("Vuoi aggiungere il match?")) {
       form = document.getElementById("form_match")
