@@ -1,0 +1,260 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <style>
+    div[name="moving"] {
+      animation: move 2s linear infinite;
+    }
+
+    @keyframes move {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    /* Quando l'immagine è visibile, applica l'animazione */
+    .zoom {
+      display: block;
+      animation: zoomInOut 0.5s infinite;
+    }
+
+    /* Definizione dell'animazione zoom in/out */
+    @keyframes zoomInOut {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+
+    /* @keyframes move {
+      0% {
+        transform: translateX(0);
+      }
+
+      33% {
+        transform: translateX(100px);
+      }
+
+      66% {
+        transform: translateX(-100px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    } */
+  </style>
+</head>
+
+<body>
+
+  {% include "navbar.html" %}
+
+  <div class="d-flex justify-content-between">
+    <div id="BoxSantoDelGiorno" style="margin:40px; overflow:auto; width:300px;">
+      <h4>Santo del giorno</h4>
+      <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
+      <p id="SantoDelGiorno"></p>
+
+      <div id="container" style="width: 300px; height: 300px; overflow: hidden;" class="text-center">
+        <span>NON PREMERE IGOR</span>
+        <img id="bouncingImage"
+          src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
+          style="width: 80px; position: absolute;" onclick="boh()" />
+      </div>
+    </div>
+
+
+    <div class="d-flex flex-column text-center">
+      <h3 class="text-center mt-5">Classifica Calcetto</h3>
+      {% for developer in classifica %}
+      <div name="" class="p-2">
+        <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
+        {{forloop.counter}} - {{developer.name}} -
+        {{developer.win_ratio}}% -
+        {{developer.win_match}}/{{developer.total_match}}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div id="random" style="width:300px;" class="mt-5">
+      <h3>Random</h3>
+      <form action="/calcetto/random_match/" method="post">
+        {% csrf_token %}
+        {% for developer in classifica %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="{{developer.id}}" name="randoms">
+          <label class="form-check-label" for="flexCheckDefault">
+            {{developer.name}}
+          </label>
+        </div>
+        {% endfor %}
+        <button class="btn btn-sm btn-success mt-3" type="submit">Random
+          match</button>
+      </form>
+      <h5>
+        {% if text_players %}
+        <span>{{ text_players|linebreaksbr }}</span>
+        {% endif %}
+      </h5>
+    </div>
+
+  </div>
+
+  <h3 class="text-center mt-3">Giocatori</h3>
+
+  <div class="d-flex justify-content-center">
+    {% for developer in developers1 %}
+    <div class="card" style="width: 15rem; margin: 8px;">
+      <div class="card-body">
+        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap" width="100px">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+          win</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="d-flex justify-content-center">
+    {% for developer in developers2 %}
+    <div class="card" style="width: 15rem; margin: 8px;">
+      <div class="card-body">
+        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+          win</button>
+        <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
+          point</button>
+        <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
+          point</button> -->
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" id="form_match" class="d-none">
+    {% csrf_token %}
+  </form>
+
+
+  <!-- <div class="container mt-4">
+    <ul class="list-unstyled">
+      {% for developer in classifica %}
+      <li class="row align-items-center mb-3">
+        <div class="col-2">
+          <div class="col-2">{{forloop.counter}}</div>
+        </div>
+        <div class="col-10">
+          <div class="row">
+            <div class="col-3"><img src="{{developer.image_url}}" style="height: 50px;" alt="Image">{{developer.name}}
+            </div>
+            <div class="col-3">{{developer.win_ratio}}%</div>
+            <div class="col-3">{{developer.win_match}}/{{developer.total_match}}</div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div> -->
+
+</body>
+
+<script>
+
+  let names = document.getElementsByName("moving")
+  for (let i = 0; i < names.length; i++) {
+    names[i].style.animationDelay = `${Math.random() * 0.8}s`
+  }
+
+  function boh() {
+    let images = document.getElementsByTagName('div');
+    for (let i = 0; i < images.length; i++) {
+
+      images[i].style.display = "block"
+      images[i].classList.add('zoom');
+      images[i].style.animationDelay = `${Math.random() * 0.3}s`
+    }
+  }
+
+  function edit_match(id, mode) {
+    if (confirm("Vuoi aggiungere il match?")) {
+      form = document.getElementById("form_match")
+      if (mode == "win") {
+        form.action = `/calcetto/win_match/${id}/`
+      }
+      else {
+        form.action = `/calcetto/lost_match/${id}/`
+      }
+      form.submit()
+    } else {
+      alert("Francesco non sa programmare Rails")
+    }
+
+  }
+
+  const image = document.getElementById('bouncingImage');
+  const container = document.getElementById('container');
+
+  let posX = Math.random() * (container.clientWidth - image.clientWidth);
+  let posY = Math.random() * (container.clientHeight - image.clientHeight);
+  let speedX = 0.8; // Velocità orizzontale
+  let speedY = 1; // Velocità verticale
+  function animate() {
+    posX += speedX;
+    posY += speedY;
+
+    // Controlla i bordi
+    if (posX + image.clientWidth >= container.clientWidth || posX < 0) {
+      speedX *= -1; // Cambia direzione
+    }
+    if (posY + image.clientHeight >= container.clientHeight || posY < 0) {
+      speedY *= -1; // Cambia direzione
+    }
+
+    // Aggiorna la posizione dell'immagine
+    image.style.left = posX + 'px';
+    image.style.top = posY + 'px';
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+</script>
+
+<script>
+  var data = new Date();
+  var datastring = data.getDate() + "/" + data.getMonth() + 1 + "/" + data.getFullYear();
+  var node = document.createElement('script');
+  node.type = 'text/javascript';
+  node.async = true;
+  node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
+  document.getElementById("BoxSantoDelGiorno").appendChild(node);
+</script>
+
+</html>

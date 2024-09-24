@@ -1,5 +1,7 @@
 <html lang="en">
 
+</html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,43 +71,31 @@
 
 <body>
 
+  {% include "navbar.html" %}
+
   <div class="d-flex justify-content-between">
     <div id="BoxSantoDelGiorno" style="margin:40px; overflow:auto; width:300px;">
-      <h4>
-        <a href="https://www.santodelgiorno.it" style="color:black; text-decoration:underline">
-          Santo del giorno
-        </a>
-      </h4>
+      <h4>Santo del giorno</h4>
       <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
-      <p id="SantoDelGiorno">
-        san francesco d'assisi
-        <i>pastore e martire</i>
-      </p>
-
-      <!-- <div>
-        <button class="btn btn-sm btn-warning" type="button" onclick="boh()">
-          <img
-            src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
-            alt=""> NON PREMERE IGOR!!!</button>
-      </div> -->
+      <p id="SantoDelGiorno"></p>
 
       <div id="container" style="width: 300px; height: 300px; overflow: hidden;" class="text-center">
+        <span>NON PREMERE IGOR</span>
         <img id="bouncingImage"
           src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
           style="width: 80px; position: absolute;" onclick="boh()" />
-        <span>NON PREMERE IGOR</span>
       </div>
-
     </div>
 
+
     <div class="d-flex flex-column text-center">
-      <h3 class="text-center mt-5">Classifica</h3>
+      <h3 class="text-center mt-5">Classifica Briscola</h3>
       {% for developer in classifica %}
       <div name="" class="p-2">
         <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
         {{forloop.counter}} - {{developer.name}} -
-        {{developer.win_ratio}}% -
-        {{developer.win_match}}/{{developer.total_match}}
+        {{developer.briscola_win_ratio}}% -
+        {{developer.briscola_win_match}}/{{developer.briscola_total_match}}
       </div>
       {% endfor %}
     </div>
@@ -133,6 +123,7 @@
     </div>
 
   </div>
+
   <h3 class="text-center mt-3">Giocatori</h3>
 
   <div class="d-flex justify-content-center">
@@ -141,9 +132,11 @@
       <div class="card-body">
         <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap" width="100px">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_briscola_match('{{developer.id}}','lost')">Match
           lost</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_briscola_match('{{developer.id}}','win')">Match
           win</button>
       </div>
     </div>
@@ -155,14 +148,12 @@
       <div class="card-body">
         <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_briscola_match('{{developer.id}}','lost')">Match
           lost</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_briscola_match('{{developer.id}}','win')">Match
           win</button>
-        <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
-          point</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_point('{{developer.id}}','add')">Add
-          point</button> -->
       </div>
     </div>
     {% endfor %}
@@ -171,7 +162,6 @@
   <form method="post" id="form_match" class="d-none">
     {% csrf_token %}
   </form>
-  </div>
 
 </body>
 
@@ -192,14 +182,14 @@
     }
   }
 
-  function edit_match(id, mode) {
+  function edit_briscola_match(id, mode) {
     if (confirm("Vuoi aggiungere il match?")) {
       form = document.getElementById("form_match")
       if (mode == "win") {
-        form.action = `/calcetto/win_match/${id}/`
+        form.action = `/calcetto/briscola_win_match/${id}/`
       }
       else {
-        form.action = `/calcetto/lost_match/${id}/`
+        form.action = `/calcetto/briscola_lost_match/${id}/`
       }
       form.submit()
     } else {
@@ -245,7 +235,6 @@
   node.type = 'text/javascript';
   node.async = true;
   node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
-  // Now insert the node into the DOM, perhaps using insertBefore()
   document.getElementById("BoxSantoDelGiorno").appendChild(node);
 </script>
 
