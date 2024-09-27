@@ -26,9 +26,19 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('three-canvas-container').appendChild(renderer.domElement);
 
+  var loader = new THREE.TextureLoader();
+  var materials = [
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") }), // Faccia 1
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") }), // Faccia 2
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") }), // Faccia 3
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") }), // Faccia 4
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") }), // Faccia 5
+    new THREE.MeshBasicMaterial({ map: loader.load("https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ") })  // Faccia 6
+  ];
+
   var geometry = new THREE.BoxGeometry();
   var material = new THREE.MeshBasicMaterial({ color: 0x55ff11 });
-  var cube = new THREE.Mesh(geometry, material);
+  var cube = new THREE.Mesh(geometry, materials);
   scene.add(cube);
 
   camera.position.z = 5;
