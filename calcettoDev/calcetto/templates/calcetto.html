@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     div[name="moving"] {
       animation: move 2s linear infinite;
@@ -76,12 +77,20 @@
       <h4>Santo del giorno</h4>
       <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
       <p id="SantoDelGiorno"></p>
-
       <div id="container" style="width: 300px; height: 300px; overflow: hidden;" class="text-center">
         <span>NON PREMERE IGOR</span>
         <img id="bouncingImage"
           src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
           style="width: 80px; position: absolute;" onclick="boh()" />
+      </div>
+
+      <div id="container" style="width: 300px; overflow: hidden; margin-top: 50px;">
+        <h4>Notizia del giorno</h4>
+        <h6>{{joke}}</h6>
+      </div>
+      <div id="container" style="width: 300px; overflow: hidden; margin-top: 50px;">
+        <h4>Battuta del giorno</h4>
+        <h6>{{joke2}}</h6>
       </div>
     </div>
 
@@ -130,9 +139,11 @@
       <div class="card-body">
         <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap" width="100px">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','lost')">Match
           lost</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','win')">Match
           win</button>
       </div>
     </div>
@@ -144,9 +155,11 @@
       <div class="card-body">
         <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap">
         <h5 class="card-title text-center">{{developer.name}}</h5>
-        <button class="btn btn-sm btn-warning" type="button" onclick="edit_match('{{developer.id}}','lost')">Match
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','lost')">Match
           lost</button>
-        <button class="btn btn-sm btn-success" type="button" onclick="edit_match('{{developer.id}}','win')">Match
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','win')">Match
           win</button>
         <!-- <button class="btn btn-sm btn-warning" type="button" onclick="edit_point('{{developer.id}}','remove')">Remove
           point</button>
@@ -201,20 +214,38 @@
     }
   }
 
-  function edit_match(id, mode) {
-    if (confirm("Vuoi aggiungere il match?")) {
-      form = document.getElementById("form_match")
-      if (mode == "win") {
-        form.action = `/calcetto/win_match/${id}/`
-      }
-      else {
-        form.action = `/calcetto/lost_match/${id}/`
-      }
-      form.submit()
-    } else {
-      alert("Francesco non sa programmare Rails")
+  function edit_match(id, name, mode) {
+    let form = document.getElementById("form_match")
+    if (mode == "win") {
+      Swal.fire({
+        title: `${name} ha vinto il match?`,
+        icon: 'success',
+        showCancelButton: true,
+        cancelButtonText: 'NO',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'SI'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.action = `/calcetto/win_match/${id}/`
+          form.submit()
+        }
+      })
     }
-
+    else {
+      Swal.fire({
+        title: `${name} ha perso il match?`,
+        icon: 'error',
+        showCancelButton: true,
+        cancelButtonText: 'NO',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'SI'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.action = `/calcetto/lost_match/${id}/`
+          form.submit()
+        }
+      })
+    }
   }
 
   const image = document.getElementById('bouncingImage');

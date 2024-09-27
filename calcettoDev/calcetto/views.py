@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from calcetto.models import *
 from rest_framework.response import Response
 from rest_framework import status
-import random
+import random, requests
 
 class Calcetto(APIView):
   
@@ -12,7 +12,15 @@ class Calcetto(APIView):
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
     classifica.sort(key=lambda dev: dev.win_ratio(), reverse=True)
-    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica}
+    res = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/today")
+    joke = res.json()["text"]
+    res2 = requests.get("https://v2.jokeapi.dev/joke/Any?contains=sex")
+    res2_json = res2.json()
+    if res2_json["type"] == "single":
+      joke2 = res2_json["joke"]
+    else:
+      joke2 = res2_json["setup"] + "\n" + res2_json["delivery"]
+    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": joke, "joke2": joke2}
     return render(request, "calcetto.html", context)
   
 class Briscola(APIView):
