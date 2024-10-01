@@ -123,8 +123,12 @@
           match</button>
       </form>
       <h5>
-        {% if text_players %}
-        <span>{{ text_players|linebreaksbr }}</span>
+        {% if players1 %}
+        <span class="text-primary">{{ players1 }}</span>
+        <br>
+        <span class="text-center">VS</span>
+        <br>
+        <span class="text-warning">{{ players2 }}</span>
         {% endif %}
       </h5>
     </div>
