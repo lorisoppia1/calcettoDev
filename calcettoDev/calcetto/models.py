@@ -30,4 +30,3 @@ class Developer(models.Model):
     if self.briscola_total_match != 0:
       return round((self.briscola_win_match * 100 / self.briscola_total_match), 2)
     return 0.0
-

@@ -77,11 +77,22 @@ class RandomMatch(APIView):
     data = dict(request.data)
     players = list(Developer.objects.filter(id__in=data["randoms"]))
     random.shuffle(players)
-    players1 = f"{players[0].name} - {players[1].name}"
-    players2 = f"{players[2].name} - {players[3].name}"
+    team1 = [players[0], players[1]]
+    team2 = [players[2], players[3]]
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
     classifica.sort(key=lambda dev: dev.win_perc(), reverse=True)
-    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "players1": players1, "players2": players2}
+    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "team1": team1, "team2": team2}
     return render(request, "calcetto.html", context)
+
+class WinTeamMatch(APIView):
+
+  def post(self, request, name1, name2, name3, name4):
+    for dev in Developer.objects.filter(name__in=[name1, name2, name3, name4]):
+      dev.total_match += 1
+      dev.save()
+    for dev in Developer.objects.filter(name__in=[name1, name2]):
+      dev.win_match += 1
+      dev.save()
+    return redirect("/calcetto/")

@@ -108,27 +108,35 @@
     </div>
 
     <div id="random" style="width:300px;" class="mt-5">
-      <h3>Random</h3>
+      <h3>Random match</h3>
       <form action="/calcetto/random_match/" method="post">
         {% csrf_token %}
         {% for developer in classifica %}
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="{{developer.id}}" name="randoms">
+          <input class="form-check-input" type="checkbox" value="{{developer.id}}" name="randoms"
+            onclick="checkRandoms()">
           <label class="form-check-label" for="flexCheckDefault">
             {{developer.name}}
           </label>
         </div>
         {% endfor %}
-        <button class="btn btn-sm btn-success mt-3" type="submit">Random
-          match</button>
+        <button id="random_button" class="btn btn-sm btn-success mt-3" type="submit"
+          style="display: none;">Random</button>
       </form>
       <h5>
-        {% if players1 %}
-        <span class="text-primary">{{ players1 }}</span>
+        {% if team1 %}
+        <span class="text-primary">{{ team1.0.name }} - {{ team1.1.name }}</span><button class="btn btn-sm btn-success"
+          style="margin-left: 15px;"
+          onclick="win_team_match('{{team1.0.name}}','{{team1.1.name}}','{{team2.0.name}}','{{team2.1.name}}')">Win</button>
         <br>
-        <span class="text-center">VS</span>
+        <span class="text-center">
+          <img src="https://img.freepik.com/vettori-premium/campo-da-calcio-in-erba-strutturata_153563-1206.jpg?" alt=""
+            width="100px">
+        </span>
         <br>
-        <span class="text-warning">{{ players2 }}</span>
+        <span class="text-warning">{{ team2.0.name }} - {{ team2.1.name }}</span><button class="btn btn-sm btn-success"
+          style="margin-left: 15px;"
+          onclick="win_team_match('{{team2.0.name}}','{{team2.1.name}}','{{team1.0.name}}','{{team1.1.name}}')">Win</button>
         {% endif %}
       </h5>
     </div>
@@ -173,6 +181,9 @@
   <form method="post" id="form_match" class="d-none">
     {% csrf_token %}
   </form>
+  <form method="post" id="team_match" class="d-none">
+    {% csrf_token %}
+  </form>
 </body>
 
 <script>
@@ -180,6 +191,22 @@
   let names = document.getElementsByName("moving")
   for (let i = 0; i < names.length; i++) {
     names[i].style.animationDelay = `${Math.random() * 0.8}s`
+  }
+
+  function checkRandoms() {
+    let randoms = document.getElementsByName("randoms")
+    let cont = 0
+    for (let i = 0; i < randoms.length; i++) {
+      if (randoms[i].checked) {
+        cont = cont + 1
+      }
+    }
+    if (cont > 3) {
+      document.getElementById("random_button").style.display = "block"
+    }
+    else {
+      document.getElementById("random_button").style.display = "none"
+    }
   }
 
   function boh() {
@@ -192,11 +219,32 @@
     }
   }
 
+  function win_team_match(win_name_1, win_name_2, lose_name_1, lose_name_2) {
+    let form = document.getElementById("team_match")
+    Swal.fire({
+      title: `${win_name_1} e ${win_name_2} hanno battuto ${lose_name_1} e ${lose_name_2} ? `,
+      icon: 'success',
+      showCancelButton: true,
+      cancelButtonText: 'NO',
+      cancelButtonColor: '#FF0000',
+      confirmButtonColor: '#008000',
+      confirmButtonText: 'SI',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.action = `/calcetto/win_team_match/${win_name_1}/${win_name_2}/${lose_name_1}/${lose_name_2}/`
+        form.submit()
+      }
+    })
+    console.log(team1)
+    console.log(team2)
+  }
+
   function edit_match(id, name, mode) {
     let form = document.getElementById("form_match")
     if (mode == "win") {
       Swal.fire({
-        title: `${name} ha vinto il match?`,
+        title: `${name} ha vinto il match ? `,
         icon: 'success',
         showCancelButton: true,
         cancelButtonText: 'NO',
@@ -206,14 +254,14 @@
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          form.action = `/calcetto/win_match/${id}/`
+          form.action = `/ calcetto / win_match / ${id} / `
           form.submit()
         }
       })
     }
     else {
       Swal.fire({
-        title: `${name} ha perso il match?`,
+        title: `${name} ha perso il match ? `,
         icon: 'error',
         showCancelButton: true,
         cancelButtonText: 'NO',
@@ -223,7 +271,7 @@
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          form.action = `/calcetto/lost_match/${id}/`
+          form.action = `/ calcetto / lost_match / ${id} /`
           form.submit()
         }
       })
