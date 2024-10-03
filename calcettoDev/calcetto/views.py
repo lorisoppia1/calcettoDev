@@ -11,7 +11,7 @@ class Calcetto(APIView):
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
-    classifica.sort(key=lambda dev: dev.win_ratio(), reverse=True)
+    classifica.sort(key=lambda dev: dev.win_perc(), reverse=True)
     res = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/today")
     joke = res.json()["text"]
     res2 = requests.get("https://v2.jokeapi.dev/joke/Any?contains=sex")
@@ -82,6 +82,6 @@ class RandomMatch(APIView):
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
-    classifica.sort(key=lambda dev: dev.win_ratio(), reverse=True)
+    classifica.sort(key=lambda dev: dev.win_perc(), reverse=True)
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "players1": players1, "players2": players2}
     return render(request, "calcetto.html", context)

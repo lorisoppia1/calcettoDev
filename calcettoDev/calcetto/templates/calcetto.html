@@ -96,12 +96,12 @@
 
 
     <div class="d-flex flex-column text-center">
-      <h3 class="text-center mt-5">Classifica Calcetto</h3>
+      <h3 class="text-center mt-5">Classifica Ottobre Calcetto</h3>
       {% for developer in classifica %}
       <div name="" class="p-2">
         <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
         {{forloop.counter}} - {{developer.name}} -
-        {{developer.win_perc}}% - {{developer.win_ratio}} -
+        {{developer.win_perc}}% -
         {{developer.win_match}}/{{developer.total_match}}
       </div>
       {% endfor %}

@@ -16,7 +16,8 @@ class Developer(models.Model):
 
   def win_ratio(self):
     if self.total_match != 0:
-      ratio = (1 + self.win_match / self.total_match) * (math.log(self.total_match + 1))
+      # ratio = (1 + self.win_match / self.total_match) * (math.log(self.total_match + 1))
+      ratio = 1 * self.win_match / (math.log(1 * self.total_match) + 1)
       return round(ratio, 2)
     return 0.0
   
