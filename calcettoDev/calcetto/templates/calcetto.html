@@ -73,24 +73,31 @@
   {% include "navbar.html" %}
 
   <div class="d-flex justify-content-between">
-    <div id="BoxSantoDelGiorno" style="margin:40px; overflow:auto; width:300px;">
-      <h4>Santo del giorno</h4>
-      <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
-      <p id="SantoDelGiorno"></p>
-      <div id="container" style="width: 300px; height: 300px; overflow: hidden;" class="text-center">
-        <span>NON PREMERE IGOR</span>
-        <img id="bouncingImage"
-          src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
-          style="width: 80px; position: absolute;" onclick="boh()" />
+    <div class="d-flex flex-column">
+      <div id="BoxSantoDelGiorno" style="margin:30px; overflow:auto; width:300px;">
+        <h4>Santo del giorno</h4>
+        <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
+        <p id="SantoDelGiorno"></p>
       </div>
 
-      <div style="width: 300px; overflow: hidden; margin-top: 50px;">
+      <div style="width: 300px; margin: 30px;">
         <h4>Notizia del giorno</h4>
         <h6>{{joke}}</h6>
       </div>
-      <div style="width: 300px; overflow: hidden; margin-top: 50px;">
-        <h4>Battuta del giorno</h4>
+
+      <div style="width: 300px; margin: 30px;">
+        <h4>Battuta random</h4>
         <h6>{{joke2}}</h6>
+      </div>
+
+      <div style="width: 300px; overflow: hidden; margin: 30px;">
+        <h4>Papera random</h4>
+        <img src="{{joke3}}" alt="" style="height: 150px;">
+      </div>
+
+      <div style="width: 300px; overflow: hidden; margin: 30px;">
+        <h4>Piatto random</h4>
+        <img src="{{joke4}}" alt="" style="height: 150px;">
       </div>
     </div>
 
@@ -105,6 +112,9 @@
         {{developer.win_match}}/{{developer.total_match}}
       </div>
       {% endfor %}
+      <h4 class="mt-5">Vincitore Settembre: Stefano<img
+          src="https://media.licdn.com/dms/image/v2/C4D03AQHbKn9e3NS5eg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1596538308126?e=2147483647&v=beta&t=m7T7gkqCV35JpVtmxIQgzc-QNyYh-ddCRzdBz9E0pww"
+          style="width: 50px;" alt="Card image cap"></h4>
     </div>
 
     <div id="random" style="width:300px;" class="mt-5">
@@ -139,6 +149,12 @@
           onclick="win_team_match('{{team2.0.name}}','{{team2.1.name}}','{{team1.0.name}}','{{team1.1.name}}')">Win</button>
         {% endif %}
       </h5>
+      <div id="container" style="width: 300px; height: 300px; position: relative" class="text-center">
+        <span class="font-weight-bold text-danger">NON PREMERE IGOR</span>
+        <img id="bouncingImage"
+          src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
+          style="width: 80px; position: absolute;" onclick="boh()" />
+      </div>
     </div>
 
   </div>
