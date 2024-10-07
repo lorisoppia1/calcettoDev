@@ -19,9 +19,7 @@ class Calcetto(APIView):
     else:
       joke2 = res2["setup"] + "\n" + res2["delivery"]
     res3 = requests.get("https://random-d.uk/api/v2/random").json()
-    res4 = requests.get("https://foodish-api.com/api/").json()
-
-    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"], "joke4" : res4["image"]}
+    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"]}
     return render(request, "calcetto.html", context)
   
 class Briscola(APIView):
