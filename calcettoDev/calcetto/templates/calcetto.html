@@ -254,7 +254,7 @@
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          form.action = `/ calcetto / win_match / ${id} / `
+          form.action = `/calcetto/win_match/${id}/`
           form.submit()
         }
       })
@@ -271,7 +271,7 @@
         reverseButtons: true
       }).then((result) => {
         if (result.isConfirmed) {
-          form.action = `/ calcetto / lost_match / ${id} /`
+          form.action = `/calcetto/lost_match/${id}/`
           form.submit()
         }
       })

@@ -14,7 +14,7 @@ class Calcetto(APIView):
     classifica.sort(key=lambda dev: dev.win_perc(), reverse=True)
     res = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/today")
     joke = res.json()["text"]
-    res2 = requests.get("https://v2.jokeapi.dev/joke/Any?contains=sex")
+    res2 = requests.get("https://v2.jokeapi.dev/joke/Any")
     res2_json = res2.json()
     if res2_json["type"] == "single":
       joke2 = res2_json["joke"]
