@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'calcetto.apps.CalcettoConfig'
+    'calcetto.apps.CalcettoConfig',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

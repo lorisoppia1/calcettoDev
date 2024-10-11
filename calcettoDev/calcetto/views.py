@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from calcetto.models import *
 from rest_framework.response import Response
 from rest_framework import status
+from calcetto.serializers import *
+from django.db.models import F, ExpressionWrapper, FloatField
 import random, requests
 
 class Calcetto(APIView):
@@ -21,6 +23,13 @@ class Calcetto(APIView):
     res3 = requests.get("https://random-d.uk/api/v2/random").json()
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"]}
     return render(request, "calcetto.html", context)
+
+class ClassificaAPI(APIView):
+
+  def get(self, request):
+    classifica = Developer.objects.annotate(win_percentage=ExpressionWrapper(F('win_match') * 100 / F('total_match'), output_field=FloatField())).order_by('-win_percentage')
+    serializer = DeveloperSerializers(classifica, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
   
 class Briscola(APIView):
   
@@ -84,6 +93,13 @@ class RandomMatch(APIView):
     classifica.sort(key=lambda dev: dev.win_perc(), reverse=True)
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "team1": team1, "team2": team2}
     return render(request, "calcetto.html", context)
+
+class RandomAPI(APIView):
+  
+  def post(self, request):
+    randoms = Developer.objects.filter(id__in=request.data["randoms"]).order_by("?")
+    serializer = DeveloperSerializers(randoms, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 class WinTeamMatch(APIView):
 

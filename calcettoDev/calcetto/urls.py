@@ -11,4 +11,6 @@ urlpatterns = [
   path('briscola_lost_match/<int:id>/', BriscolaLostMatch.as_view(), name='briscola-lost-match'),
   path('random_match/', RandomMatch.as_view(), name='random-match'),
   path('win_team_match/<str:name1>/<str:name2>/<str:name3>/<str:name4>/', WinTeamMatch.as_view(), name='win-team-match'),
+  path("classifica/", ClassificaAPI.as_view(), name="classifica-api"),
+  path("random/", RandomAPI.as_view(), name="random-api")
 ]
