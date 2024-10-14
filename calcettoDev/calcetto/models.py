@@ -9,6 +9,7 @@ class Developer(models.Model):
   image_url = models.CharField(max_length=500, default="")
   briscola_total_match = models.IntegerField(default=0)
   briscola_win_match = models.IntegerField(default=0)
+  params = models.JSONField(default=dict, blank=True, null=True)
 
   def __str__(self):
     return self.name
@@ -30,3 +31,16 @@ class Developer(models.Model):
     if self.briscola_total_match != 0:
       return round((self.briscola_win_match * 100 / self.briscola_total_match), 2)
     return 0.0
+  
+class Match(models.Model):
+
+  winner_1 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="matches_winner_1")
+  winner_2 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="matches_winner_2")
+  loser_1 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="matches_loser_1")
+  loser_2 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="matches_loser_2")
+  day = models.DateTimeField(auto_now_add=True)
+
+  def __str__(self):
+    if self.winner_1 and self.winner_2 and self.loser_1 and self.loser_2:
+      return f"{self.winner_1.name} - {self.winner_2.name} - {self.loser_1.name} - {self.loser_2.name} - {str(self.day)}"
+    return ""

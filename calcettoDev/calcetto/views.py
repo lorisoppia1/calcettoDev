@@ -4,7 +4,7 @@ from calcetto.models import *
 from rest_framework.response import Response
 from rest_framework import status
 from calcetto.serializers import *
-from django.db.models import F, ExpressionWrapper, FloatField
+from django.db.models import Q, F, ExpressionWrapper, FloatField
 import random, requests
 
 class Calcetto(APIView):
@@ -111,3 +111,32 @@ class WinTeamMatch(APIView):
       dev.win_match += 1
       dev.save()
     return redirect("/calcetto/")
+  
+class MatchesAPI(APIView):
+
+  def get(self, request):
+    matches = Match.objects.all()
+    serializer = MatchSerializers(matches, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+  
+  def post(self, request):
+    # {"winner_1": 1, "winner_2": 2, "loser_1": 3, "loser_2": 4}
+    winner_1 = Developer.objects.get(id=request.data["winner_1"])
+    winner_2 = Developer.objects.get(id=request.data["winner_2"])
+    loser_1 = Developer.objects.get(id=request.data["loser_1"])
+    loser_2 = Developer.objects.get(id=request.data["loser_2"])
+    Match.objects.create(
+      winner_1 = winner_1,
+      winner_2 = winner_2,
+      loser_1 = loser_1,
+      loser_2 = loser_2,
+      )
+    return Response(status=status.HTTP_200_OK)
+  
+class MatchAPI(APIView):
+
+  def get(self, request, id):
+    developer = Developer.objects.get(id=id)
+    matches = Match.objects.filter(Q(winner_1=developer) | Q(winner_2=developer) | Q(loser_1=developer) | Q(loser_2=developer)).distinct()
+    serializer = MatchSerializers(matches, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
