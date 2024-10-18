@@ -140,3 +140,13 @@ class MatchAPI(APIView):
     matches = Match.objects.filter(Q(winner_1=developer) | Q(winner_2=developer) | Q(loser_1=developer) | Q(loser_2=developer)).distinct()
     serializer = MatchSerializers(matches, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+class EditParamsAPI(APIView):
+
+  def post(self, request, id):
+    developer = Developer.objects.get(id=id)
+    new_params = request.data["new_params"]
+    developer.params = new_params
+    developer.save()
+    serializer = DeveloperSerializers(developer, many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)

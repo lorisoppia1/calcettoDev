@@ -15,5 +15,6 @@ urlpatterns = [
   path("random/", RandomAPI.as_view(), name="random-api"),
   path("all_matches/", MatchesAPI.as_view(), name="matches-api"),
   path("create_match/", MatchesAPI.as_view(), name="create-match-api"),
-  path("get_match/<int:id>/", MatchAPI.as_view(), name="match-api")
+  path("get_match/<int:id>/", MatchAPI.as_view(), name="match-api"),
+  path("edit_params/<int:id>/", EditParamsAPI.as_view(), name="edit-params"),
 ]
