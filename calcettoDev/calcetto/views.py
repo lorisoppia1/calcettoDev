@@ -122,9 +122,19 @@ class MatchesAPI(APIView):
   def post(self, request):
     # {"winner_1": 1, "winner_2": 2, "loser_1": 3, "loser_2": 4}
     winner_1 = Developer.objects.get(id=request.data["winner_1"])
+    winner_1.total_match += 1
+    winner_1.win_match += 1
+    winner_1.save()
     winner_2 = Developer.objects.get(id=request.data["winner_2"])
+    winner_2.total_match += 1
+    winner_2.win_match += 1
+    winner_2.save()
     loser_1 = Developer.objects.get(id=request.data["loser_1"])
+    loser_1.total_match += 1
+    loser_1.save()
     loser_2 = Developer.objects.get(id=request.data["loser_2"])
+    loser_2.total_match += 1
+    loser_2.save()
     Match.objects.create(
       winner_1 = winner_1,
       winner_2 = winner_2,
