@@ -4,12 +4,15 @@ import math
 class Developer(models.Model):
 
   name = models.CharField(max_length=100)
+  description = models.TextField(default="")
   total_match = models.IntegerField(default=0)
   win_match = models.IntegerField(default=0)
   image_url = models.CharField(max_length=500, default="")
   briscola_total_match = models.IntegerField(default=0)
   briscola_win_match = models.IntegerField(default=0)
   params = models.JSONField(default=dict, blank=True, null=True)
+  total_match_singolo = models.IntegerField(default=0)
+  win_match_singolo = models.IntegerField(default=0)
 
   def __str__(self):
     return self.name
@@ -25,6 +28,11 @@ class Developer(models.Model):
   def win_perc(self):
     if self.total_match != 0:
       return round((self.win_match * 100 / self.total_match), 2)
+    return 0.0
+  
+  def win_perc_singolo(self):
+    if self.total_match_singolo != 0:
+      return round((self.win_match_singolo * 100 / self.total_match_singolo), 2)
     return 0.0
   
   def briscola_win_ratio(self):

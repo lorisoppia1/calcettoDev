@@ -17,4 +17,5 @@ urlpatterns = [
   path("create_match/", MatchesAPI.as_view(), name="create-match-api"),
   path("get_match/<int:id>/", MatchAPI.as_view(), name="match-api"),
   path("edit_params/<int:id>/", EditParamsAPI.as_view(), name="edit-params"),
+  path('singolo/', CalcettoSingolo.as_view(), name='index-singolo'),
 ]

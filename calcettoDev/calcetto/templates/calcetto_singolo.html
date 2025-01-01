@@ -1,0 +1,330 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    div[name="moving"] {
+      animation: move 2s linear infinite;
+    }
+
+    @keyframes move {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    /* Quando l'immagine è visibile, applica l'animazione */
+    .zoom {
+      display: block;
+      animation: zoomInOut 0.5s infinite;
+    }
+
+    /* Definizione dell'animazione zoom in/out */
+    @keyframes zoomInOut {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(2);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+
+    /* @keyframes move {
+      0% {
+        transform: translateX(0);
+      }
+
+      33% {
+        transform: translateX(100px);
+      }
+
+      66% {
+        transform: translateX(-100px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
+    } */
+  </style>
+</head>
+
+<body>
+
+  {% include "navbar.html" %}
+
+  <div class="d-flex justify-content-between">
+    <div class="d-flex flex-column">
+      <div id="BoxSantoDelGiorno" style="margin:30px; overflow:auto; width:300px;">
+        <h4>Santo del giorno</h4>
+        <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
+        <p id="SantoDelGiorno"></p>
+      </div>
+
+      <div style="width: 300px; margin: 30px;">
+        <h4>Notizia del giorno</h4>
+        <h6>{{joke}}</h6>
+      </div>
+
+      <div style="width: 300px; margin: 30px;">
+        <h4>Battuta random</h4>
+        <h6>{{joke2}}</h6>
+      </div>
+
+      <div style="width: 300px; overflow: hidden; margin: 30px;">
+        <h4>Papera random</h4>
+        <img src="{{joke3}}" alt="" style="height: 150px;">
+      </div>
+
+    </div>
+
+
+    <div class="d-flex flex-column text-center">
+      <h3 class="text-center mt-5">Classifica Novembre Calcetto Singolo</h3>
+      {% for developer in classifica %}
+      <div name="" class="p-2">
+        <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
+        {{forloop.counter}} - {{developer.name}} -
+        {{developer.win_perc_singolo}}% -
+        {{developer.win_match_singolo}}/{{developer.total_match_singolo}}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div id="random" style="width:300px;" class="mt-5">
+      <h3>Random match</h3>
+      <form action="/calcetto/random_match/" method="post">
+        {% csrf_token %}
+        {% for developer in classifica %}
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="{{developer.id}}" name="randoms"
+            onclick="checkRandoms()">
+          <label class="form-check-label" for="flexCheckDefault">
+            {{developer.name}}
+          </label>
+        </div>
+        {% endfor %}
+        <button id="random_button" class="btn btn-sm btn-success mt-3" type="submit"
+          style="display: none;">Random</button>
+      </form>
+      <h5>
+        {% if team1 %}
+        <span class="text-primary">{{ team1.0.name }} - {{ team1.1.name }}</span><button class="btn btn-sm btn-success"
+          style="margin-left: 15px;"
+          onclick="win_team_match('{{team1.0.name}}','{{team1.1.name}}','{{team2.0.name}}','{{team2.1.name}}')">Win</button>
+        <br>
+        <span class="text-center">
+          <img src="https://img.freepik.com/vettori-premium/campo-da-calcio-in-erba-strutturata_153563-1206.jpg?" alt=""
+            width="100px">
+        </span>
+        <br>
+        <span class="text-warning">{{ team2.0.name }} - {{ team2.1.name }}</span><button class="btn btn-sm btn-success"
+          style="margin-left: 15px;"
+          onclick="win_team_match('{{team2.0.name}}','{{team2.1.name}}','{{team1.0.name}}','{{team1.1.name}}')">Win</button>
+        {% endif %}
+      </h5>
+      <div id="container" style="width: 300px; height: 300px; position: relative" class="text-center">
+        <span class="font-weight-bold text-danger">NON PREMERE IGOR</span>
+        <img id="bouncingImage"
+          src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
+          style="width: 80px; position: absolute;" onclick="boh()" />
+      </div>
+    </div>
+
+  </div>
+
+  <h3 class="text-center mt-3">Giocatori</h3>
+
+  <div class="d-flex justify-content-center">
+    {% for developer in developers1 %}
+    <div class="card" style="width: 15rem; margin: 8px;">
+      <div class="card-body">
+        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap" width="100px">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','win')">Match
+          win</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="d-flex justify-content-center">
+    {% for developer in developers2 %}
+    <div class="card" style="width: 15rem; margin: 8px;">
+      <div class="card-body">
+        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap">
+        <h5 class="card-title text-center">{{developer.name}}</h5>
+        <button class="btn btn-sm btn-warning" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','lost')">Match
+          lost</button>
+        <button class="btn btn-sm btn-success" type="button"
+          onclick="edit_match('{{developer.id}}','{{developer.name}}','win')">Match
+          win</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" id="form_match" class="d-none">
+    {% csrf_token %}
+  </form>
+  <form method="post" id="team_match" class="d-none">
+    {% csrf_token %}
+  </form>
+</body>
+
+<script>
+
+  let names = document.getElementsByName("moving")
+  for (let i = 0; i < names.length; i++) {
+    names[i].style.animationDelay = `${Math.random() * 0.8}s`
+  }
+
+  function checkRandoms() {
+    let randoms = document.getElementsByName("randoms")
+    let cont = 0
+    for (let i = 0; i < randoms.length; i++) {
+      if (randoms[i].checked) {
+        cont = cont + 1
+      }
+    }
+    if (cont > 3) {
+      document.getElementById("random_button").style.display = "block"
+    }
+    else {
+      document.getElementById("random_button").style.display = "none"
+    }
+  }
+
+  function boh() {
+    let images = document.getElementsByTagName('div');
+    for (let i = 0; i < images.length; i++) {
+
+      images[i].style.display = "block"
+      images[i].classList.add('zoom');
+      images[i].style.animationDelay = `${Math.random() * 0.3}s`
+    }
+  }
+
+  function win_team_match(win_name_1, win_name_2, lose_name_1, lose_name_2) {
+    let form = document.getElementById("team_match")
+    Swal.fire({
+      title: `${win_name_1} e ${win_name_2} hanno battuto ${lose_name_1} e ${lose_name_2} ? `,
+      icon: 'success',
+      showCancelButton: true,
+      cancelButtonText: 'NO',
+      cancelButtonColor: '#FF0000',
+      confirmButtonColor: '#008000',
+      confirmButtonText: 'SI',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        form.action = `/calcetto/win_team_match/${win_name_1}/${win_name_2}/${lose_name_1}/${lose_name_2}/`
+        form.submit()
+      }
+    })
+    console.log(team1)
+    console.log(team2)
+  }
+
+  function edit_match(id, name, mode) {
+    let form = document.getElementById("form_match")
+    if (mode == "win") {
+      Swal.fire({
+        title: `${name} ha vinto il match ? `,
+        icon: 'success',
+        showCancelButton: true,
+        cancelButtonText: 'NO',
+        cancelButtonColor: '#FF0000',
+        confirmButtonColor: '#008000',
+        confirmButtonText: 'SI',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.action = `/calcetto/win_match/${id}/`
+          form.submit()
+        }
+      })
+    }
+    else {
+      Swal.fire({
+        title: `${name} ha perso il match ? `,
+        icon: 'error',
+        showCancelButton: true,
+        cancelButtonText: 'NO',
+        cancelButtonColor: '#FF0000',
+        confirmButtonColor: '#008000',
+        confirmButtonText: 'SI',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          form.action = `/calcetto/lost_match/${id}/`
+          form.submit()
+        }
+      })
+    }
+  }
+
+  const image = document.getElementById('bouncingImage');
+  const container = document.getElementById('container');
+
+  let posX = Math.random() * (container.clientWidth - image.clientWidth);
+  let posY = Math.random() * (container.clientHeight - image.clientHeight);
+  let speedX = 0.8; // Velocità orizzontale
+  let speedY = 1; // Velocità verticale
+  function animate() {
+    posX += speedX;
+    posY += speedY;
+
+    // Controlla i bordi
+    if (posX + image.clientWidth >= container.clientWidth || posX < 0) {
+      speedX *= -1; // Cambia direzione
+    }
+    if (posY + image.clientHeight >= container.clientHeight || posY < 0) {
+      speedY *= -1; // Cambia direzione
+    }
+
+    // Aggiorna la posizione dell'immagine
+    image.style.left = posX + 'px';
+    image.style.top = posY + 'px';
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+
+</script>
+
+<script>
+  var data = new Date();
+  var datastring = data.getDate() + "/" + data.getMonth() + 1 + "/" + data.getFullYear();
+  var node = document.createElement('script');
+  node.type = 'text/javascript';
+  node.async = true;
+  node.src = 'https://www.santodelgiorno.it/_scriptjs/santodelgiorno.php?v=' + datastring;
+  document.getElementById("BoxSantoDelGiorno").appendChild(node);
+</script>
+
+</html>

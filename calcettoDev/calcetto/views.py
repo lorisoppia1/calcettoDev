@@ -24,6 +24,24 @@ class Calcetto(APIView):
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"]}
     return render(request, "calcetto.html", context)
 
+class CalcettoSingolo(APIView):
+
+  def get(self, request):
+    developers1 = Developer.objects.all().order_by("name")[:6]
+    developers2 = Developer.objects.all().order_by("name")[6:]
+    classifica = list(Developer.objects.all())
+    classifica.sort(key=lambda dev: dev.win_perc_singolo(), reverse=True)
+    res = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/today").json()
+    res2 = requests.get("https://v2.jokeapi.dev/joke/Any").json()
+    if res2["type"] == "single":
+      joke2 = res2["joke"]
+    else:
+      joke2 = res2["setup"] + "\n" + res2["delivery"]
+    res3 = requests.get("https://random-d.uk/api/v2/random").json()
+    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"]}
+    return render(request, "calcetto_singolo.html", context)
+
+
 class ClassificaAPI(APIView):
 
   def get(self, request):
