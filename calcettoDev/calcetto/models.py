@@ -13,6 +13,7 @@ class Developer(models.Model):
   params = models.JSONField(default=dict, blank=True, null=True)
   total_match_singolo = models.IntegerField(default=0)
   win_match_singolo = models.IntegerField(default=0)
+  slack_id = models.CharField(max_length=100, default="")
 
   def __str__(self):
     return self.name
@@ -24,22 +25,22 @@ class Developer(models.Model):
       ratio = 1 * self.win_match / (math.log(1 * self.total_match) + 1)
       return round(ratio, 2)
     return 0.0
-  
+
   def win_perc(self):
     if self.total_match != 0:
       return round((self.win_match * 100 / self.total_match), 2)
     return 0.0
-  
+
   def win_perc_singolo(self):
     if self.total_match_singolo != 0:
       return round((self.win_match_singolo * 100 / self.total_match_singolo), 2)
     return 0.0
-  
+
   def briscola_win_ratio(self):
     if self.briscola_total_match != 0:
       return round((self.briscola_win_match * 100 / self.briscola_total_match), 2)
     return 0.0
-  
+
 class Match(models.Model):
 
   winner_1 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True, default=None, related_name="matches_winner_1")

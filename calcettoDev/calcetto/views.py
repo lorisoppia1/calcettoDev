@@ -8,7 +8,7 @@ from django.db.models import Q, F, ExpressionWrapper, FloatField
 import random, requests
 
 class Calcetto(APIView):
-  
+
   def get(self, request):
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
@@ -48,9 +48,9 @@ class ClassificaAPI(APIView):
     classifica = Developer.objects.annotate(win_percentage=ExpressionWrapper(F('win_match') * 100 / F('total_match'), output_field=FloatField())).order_by('-win_percentage')
     serializer = DeveloperSerializers(classifica, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+
 class Briscola(APIView):
-  
+
   def get(self, request):
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
@@ -58,7 +58,7 @@ class Briscola(APIView):
     classifica.sort(key=lambda dev: dev.briscola_win_ratio(), reverse=True)
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica}
     return render(request, "briscola.html", context)
-  
+
 class Index(APIView):
   def get(self, request):
     return render(request, "index.html")
@@ -79,7 +79,7 @@ class LostMatch(APIView):
     developer.total_match += 1
     developer.save()
     return redirect("/calcetto/")
-  
+
 class BriscolaWinMatch(APIView):
 
   def post(self, request, id):
@@ -96,15 +96,54 @@ class BriscolaLostMatch(APIView):
     developer.briscola_total_match += 1
     developer.save()
     return redirect("/calcetto/briscola/")
-  
+
 class RandomMatch(APIView):
 
   def post(self, request):
     data = dict(request.data)
     players = list(Developer.objects.filter(id__in=data["randoms"]))
+
     random.shuffle(players)
     team1 = [players[0], players[1]]
     team2 = [players[2], players[3]]
+
+    # → invio notifica Slack con compagni
+    SLACK_TOKEN = 'xoxb-4707778244432-4683996066467-lyH4DSbJJ0cZGf8MGCMvrHBj'
+    headers = {
+      'Authorization': f'Bearer {SLACK_TOKEN}',
+      'Content-Type': 'application/json'
+    }
+    for player in team1 + team2:
+      if not player.slack_id:
+        continue
+      # calcolo nomi compagni
+      squad = team1 if player in team1 else team2
+      mates = [p.name for p in squad if p.id != player.id]
+      mates_str = " e ".join(mates)
+      opponents = team2 if squad is team1 else team1
+      opponents_names = [p.name for p in opponents]
+      opponents_str = " e ".join(opponents_names)
+      payload = {
+        "channel": player.slack_id,
+        "text": f"👋 Ciao {player.name}, sei il prescelto!!!",
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": f"👋 Ciao {player.name}, sei in squadra con {mates_str} e giocherai contro {opponents_str}!",
+            }
+          }
+        ]
+      }
+      resp = requests.post(
+        "https://slack.com/api/chat.postMessage",
+        headers=headers,
+        json=payload
+      )
+      if not resp.ok or not resp.json().get("ok"):
+        print(f"Slack error for {player.name}: {resp.text}")
+
     developers1 = Developer.objects.all().order_by("name")[:6]
     developers2 = Developer.objects.all().order_by("name")[6:]
     classifica = list(Developer.objects.all())
@@ -113,7 +152,7 @@ class RandomMatch(APIView):
     return render(request, "calcetto.html", context)
 
 class RandomAPI(APIView):
-  
+
   def post(self, request):
     randoms = Developer.objects.filter(id__in=request.data["randoms"]).order_by("?")
     serializer = DeveloperSerializers(randoms, many=True)
@@ -129,14 +168,14 @@ class WinTeamMatch(APIView):
       dev.win_match += 1
       dev.save()
     return redirect("/calcetto/")
-  
+
 class MatchesAPI(APIView):
 
   def get(self, request):
     matches = Match.objects.all()
     serializer = MatchSerializers(matches, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
-  
+
   def post(self, request):
     # {"winner_1": 1, "winner_2": 2, "loser_1": 3, "loser_2": 4}
     winner_1 = Developer.objects.get(id=request.data["winner_1"])
@@ -160,7 +199,7 @@ class MatchesAPI(APIView):
       loser_2 = loser_2,
       )
     return Response(status=status.HTTP_200_OK)
-  
+
 class MatchAPI(APIView):
 
   def get(self, request, id):
