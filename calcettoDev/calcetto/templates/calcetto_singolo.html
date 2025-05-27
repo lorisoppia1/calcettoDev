@@ -72,89 +72,9 @@
 
   {% include "navbar.html" %}
 
-  <div class="d-flex justify-content-between">
-    <div class="d-flex flex-column">
-      <div id="BoxSantoDelGiorno" style="margin:30px; overflow:auto; width:300px;">
-        <h4>Santo del giorno</h4>
-        <img id="Immagine" style="float:left; margin-right:4px; margin-bottom:5px">
-        <p id="SantoDelGiorno"></p>
-      </div>
-
-      <div style="width: 300px; margin: 30px;">
-        <h4>Notizia del giorno</h4>
-        <h6>{{joke}}</h6>
-      </div>
-
-      <div style="width: 300px; margin: 30px;">
-        <h4>Battuta random</h4>
-        <h6>{{joke2}}</h6>
-      </div>
-
-      <div style="width: 300px; overflow: hidden; margin: 30px;">
-        <h4>Papera random</h4>
-        <img src="{{joke3}}" alt="" style="height: 150px;">
-      </div>
-
-    </div>
-
-
-    <div class="d-flex flex-column text-center">
-      <h3 class="text-center mt-5">Classifica Novembre Calcetto Singolo</h3>
-      {% for developer in classifica %}
-      <div name="" class="p-2">
-        <img src="{{developer.image_url}}" style="width: 50px;" alt="Card image cap">
-        {{forloop.counter}} - {{developer.name}} -
-        {{developer.win_perc_singolo}}% -
-        {{developer.win_match_singolo}}/{{developer.total_match_singolo}}
-      </div>
-      {% endfor %}
-    </div>
-
-    <div id="random" style="width:300px;" class="mt-5">
-      <h3>Random match</h3>
-      <form action="/calcetto/random_match/" method="post">
-        {% csrf_token %}
-        {% for developer in classifica %}
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="{{developer.id}}" name="randoms"
-            onclick="checkRandoms()">
-          <label class="form-check-label" for="flexCheckDefault">
-            {{developer.name}}
-          </label>
-        </div>
-        {% endfor %}
-        <button id="random_button" class="btn btn-sm btn-success mt-3" type="submit"
-          style="display: none;">Random</button>
-      </form>
-      <h5>
-        {% if team1 %}
-        <span class="text-primary">{{ team1.0.name }} - {{ team1.1.name }}</span><button class="btn btn-sm btn-success"
-          style="margin-left: 15px;"
-          onclick="win_team_match('{{team1.0.name}}','{{team1.1.name}}','{{team2.0.name}}','{{team2.1.name}}')">Win</button>
-        <br>
-        <span class="text-center">
-          <img src="https://img.freepik.com/vettori-premium/campo-da-calcio-in-erba-strutturata_153563-1206.jpg?" alt=""
-            width="100px">
-        </span>
-        <br>
-        <span class="text-warning">{{ team2.0.name }} - {{ team2.1.name }}</span><button class="btn btn-sm btn-success"
-          style="margin-left: 15px;"
-          onclick="win_team_match('{{team2.0.name}}','{{team2.1.name}}','{{team1.0.name}}','{{team1.1.name}}')">Win</button>
-        {% endif %}
-      </h5>
-      <div id="container" style="width: 300px; height: 300px; position: relative" class="text-center">
-        <span class="font-weight-bold text-danger">NON PREMERE IGOR</span>
-        <img id="bouncingImage"
-          src="https://media.licdn.com/dms/image/v2/C4E03AQGPBr2khFoD2w/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1517707529832?e=1732147200&v=beta&t=6NF1WHJh6b3dSsdUCggUnBiLn2y4RWo_TlRKUTtMUmQ"
-          style="width: 80px; position: absolute;" onclick="boh()" />
-      </div>
-    </div>
-
-  </div>
-
   <h3 class="text-center mt-3">Giocatori</h3>
 
-  <div class="d-flex justify-content-center">
+  <div class="card-group">
     {% for developer in developers1 %}
     <div class="card" style="width: 15rem; margin: 8px;">
       <div class="card-body">
@@ -170,11 +90,11 @@
     </div>
     {% endfor %}
   </div>
-  <div class="d-flex justify-content-center">
+  <div class="card-group">
     {% for developer in developers2 %}
     <div class="card" style="width: 15rem; margin: 8px;">
       <div class="card-body">
-        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap">
+        <img class="card-img-top" src="{{developer.image_url}}" alt="Card image cap" height="200px">
         <h5 class="card-title text-center">{{developer.name}}</h5>
         <button class="btn btn-sm btn-warning" type="button"
           onclick="edit_match('{{developer.id}}','{{developer.name}}','lost')">Match
@@ -186,6 +106,7 @@
     </div>
     {% endfor %}
   </div>
+
 
   <form method="post" id="form_match" class="d-none">
     {% csrf_token %}

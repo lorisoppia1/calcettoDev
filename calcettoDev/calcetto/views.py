@@ -27,18 +27,9 @@ class Calcetto(APIView):
 class CalcettoSingolo(APIView):
 
   def get(self, request):
-    developers1 = Developer.objects.all().order_by("name")[:6]
-    developers2 = Developer.objects.all().order_by("name")[6:]
-    classifica = list(Developer.objects.all())
-    classifica.sort(key=lambda dev: dev.win_perc_singolo(), reverse=True)
-    res = requests.get("https://uselessfacts.jsph.pl/api/v2/facts/today").json()
-    res2 = requests.get("https://v2.jokeapi.dev/joke/Any").json()
-    if res2["type"] == "single":
-      joke2 = res2["joke"]
-    else:
-      joke2 = res2["setup"] + "\n" + res2["delivery"]
-    res3 = requests.get("https://random-d.uk/api/v2/random").json()
-    context = {"developers1": developers1, "developers2": developers2, "classifica": classifica, "joke": res["text"], "joke2": joke2, "joke3": res3["url"]}
+    developers1 = Developer.objects.all().order_by("name")[:7]
+    developers2 = Developer.objects.all().order_by("name")[7:]
+    context = {"developers1": developers1, "developers2": developers2}
     return render(request, "calcetto_singolo.html", context)
 
 
@@ -58,10 +49,6 @@ class Briscola(APIView):
     classifica.sort(key=lambda dev: dev.briscola_win_ratio(), reverse=True)
     context = {"developers1": developers1, "developers2": developers2, "classifica": classifica}
     return render(request, "briscola.html", context)
-
-class Index(APIView):
-  def get(self, request):
-    return render(request, "index.html")
 
 class WinMatch(APIView):
 
@@ -217,3 +204,8 @@ class EditParamsAPI(APIView):
     developer.save()
     serializer = DeveloperSerializers(developer, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+class Pitagora(APIView):
+
+  def get(self, request):
+    return render(request, "pitagora3.html")

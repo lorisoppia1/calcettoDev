@@ -3,7 +3,6 @@ from calcetto.views import *
 
 urlpatterns = [
   path('', Calcetto.as_view(), name='home'),
-  path('index/', Index.as_view(), name='index'),
   path('briscola/', Briscola.as_view(), name='briscola'),
   path('win_match/<int:id>/', WinMatch.as_view(), name='win-match'),
   path('lost_match/<int:id>/', LostMatch.as_view(), name='remove-point'),
@@ -18,4 +17,5 @@ urlpatterns = [
   path("get_match/<int:id>/", MatchAPI.as_view(), name="match-api"),
   path("edit_params/<int:id>/", EditParamsAPI.as_view(), name="edit-params"),
   path('singolo/', CalcettoSingolo.as_view(), name='index-singolo'),
+  path('pitagora/', Pitagora.as_view(), name='pitagora'),
 ]
