@@ -18,4 +18,6 @@ urlpatterns = [
   path("edit_params/<int:id>/", EditParamsAPI.as_view(), name="edit-params"),
   path('singolo/', CalcettoSingolo.as_view(), name='index-singolo'),
   path('pitagora/', Pitagora.as_view(), name='pitagora'),
+  path('torneo/', Torneo.as_view(), name='torneo'),
+  path('torneo-random/', TorneoRandom.as_view(), name='torneo-random'),
 ]

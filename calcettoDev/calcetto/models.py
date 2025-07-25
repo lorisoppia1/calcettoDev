@@ -53,3 +53,17 @@ class Match(models.Model):
     if self.winner_1 and self.winner_2 and self.loser_1 and self.loser_2:
       return f"{self.winner_1.name} - {self.winner_2.name} - {self.loser_1.name} - {self.loser_2.name} - {str(self.day)}"
     return ""
+
+# class Team(models.Model):
+#   player_1 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True)
+#   player_2 = models.ForeignKey(Developer, on_delete=models.SET_NULL, null=True, blank=True)
+#   points = models.IntegerField(default=0)
+
+#   def __str__(self):
+#     if self.player_1 and self.player_2:
+#       return f"{self.player_1.name} - {self.player_2.name} - {self.points}"
+#     return self.id
+
+# class TeamMatch(models.Model):
+#   team_1 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)
+#   team_2 = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, blank=True)

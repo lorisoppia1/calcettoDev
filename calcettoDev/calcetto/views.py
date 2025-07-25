@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from calcetto.serializers import *
 from django.db.models import Q, F, ExpressionWrapper, FloatField
+from itertools import combinations
 import random, requests
 
 class Calcetto(APIView):
@@ -208,4 +209,46 @@ class EditParamsAPI(APIView):
 class Pitagora(APIView):
 
   def get(self, request):
-    return render(request, "pitagora3.html")
+    # fai nostri servizi con 6 figure geometriche (cerchio. triangolo e quadrato) o foto, logopedia, psicoterapia, psicologia dell'eta evolutiva
+    # TNPEE, osteopatia D.O. e chinesiologia, massoterapia
+
+    # nella parte Un luogo di ascolto e supporto metti un tube tipo londra in css con 6 fermate
+
+    # metti invio mail alessandro@logopedistarigamonti.com nel prenota
+
+    # nella home metto studio pitagora con il font e sotto servizi rieducativi e riabilitativi al centro
+
+    # fai uguale fino a formazione esclusa.
+    return render(request, "pitagora4.html")
+  
+class Torneo(APIView):
+
+  def get(self, request):
+    developers = Developer.objects.all()
+    context = {"developers": developers}
+    return render(request, "torneo.html", context=context)
+
+class TorneoRandom(APIView):
+
+  def post(self, request):
+    data = dict(request.data)
+    players = list(Developer.objects.filter(id__in=data["randoms"]))
+    random.shuffle(players)
+    num_teams = int(len(players) / 2)
+    response = {"teams": {}, "matches": []}
+    for i in range(num_teams):
+      response["teams"][f"team_{i+1}"] = {
+        "player_1" : {"id": players[i*2].id, "name":players[i*2].name},
+        "player_2" : {"id": players[i*2+1].id, "name":players[i*2+1].name},
+      }
+    
+    team_ids = list(response["teams"].keys())
+    andata = []
+    ritorno = []
+
+    for team1, team2 in combinations(team_ids, 2):
+        andata.append({"home": team1, "away": team2})
+        ritorno.append({"home": team2, "away": team1})
+
+    response["matches"] = andata + ritorno
+    return Response(response, status=status.HTTP_200_OK)
